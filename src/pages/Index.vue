@@ -1,11 +1,11 @@
 <template>
     <el-container>
-        <el-header style="height: auto;" class="pb-4">
-            <top></top>
-        </el-header>
+        <navigation></navigation>
         <el-container>
-            <navigation></navigation>
-            <el-main class="py-0 pl-0">
+            <el-header style="height: auto;" class="pb-4">
+                <top></top>
+            </el-header>
+            <el-main class="py-0">
                 <el-card class="rounded-sm main_height box-card">
                     <router-view></router-view>
                 </el-card>

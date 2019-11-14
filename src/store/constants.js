@@ -1,0 +1,12 @@
+// user
+export const LOGIN = 'login'
+export const SET_USER = 'setUser'
+export const GET_USER = 'getUser'
+export const LOGOUT = 'logout'
+export const SEND_EMAIL = 'sendEmail'
+export const GET_PROFILES = 'getProfiles'
+export const CREATE_PROFILE = 'createProfile'
+export const DELETE_PROFILE = 'deleteProfile'
+export const UPDATE_PROFILE = 'updateProfile'
+export const SET_PROFILES_STATE = 'setProfilesState'
+export const SET_PROFILES = 'setProfiles'

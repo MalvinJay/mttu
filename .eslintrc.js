@@ -7,9 +7,8 @@ module.exports = {
     node: true
   },
   extends: [
-    // "plugin:prettier/recommended", 
-    "plugin:vue/essential", 
-    // "@vue/prettier"
+    // "plugin:prettier/recommended",
+    "plugin:vue/essential",
   ],
   plugins: [
     'vue'

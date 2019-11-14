@@ -2,7 +2,7 @@
     <div class="p-4 w-1/2 mx-auto h-screen">
         <div class="flex justify-center items-center my-8">
             <h2>WELCOME TO MTTU </h2>
-            <img src="@/assets/images/logo.jpeg" class="w-16" alt="">
+            <img src="@/assets/images/logo.png" class="w-16 ml-4" alt="">
         </div>
         <div class="w-full max-w-md mx-auto">
             <el-form :model="form" :rules="rules" ref="ruleForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -14,7 +14,7 @@
                 </el-form-item>
 
                 <el-form-item class="flex justify-center">
-                    <el-button type="primary" @click="submitForm('ruleForm')">LOG IN</el-button>
+                    <el-button :loading="loading" type="primary" @click="submitForm('ruleForm')">LOG IN</el-button>
                     <p class="mt-2">
                         <router-link to="/resetEmail">Forgot Password?</router-link>
                     </p>
@@ -31,6 +31,7 @@
 export default {
     data() {
         return {
+            loading: false,
             form: {
                 name: '',
                 password: '',
@@ -48,13 +49,22 @@ export default {
     },
     methods: {
         submitForm(formName) {
-            setTimeout(() => {
-                this.$router.push('/home')
-            this.$message({
-                message: 'Login Success',
-                type: 'success'
-            });                
-            }, 2000);
+            this.loading = true;
+            this.$store.dispatch('login', this.form)
+            .then(response => {
+                this.$router.push('/')
+            })
+            .catch(error => {
+                this.$message({
+                    message: error,
+                    type: 'error'
+                });                  
+                console.log(error)
+            })
+            .finally(() => {
+                localStorage.setItem('userPass', this.form.password)
+                this.loading = false
+            })
         }
     }
 }

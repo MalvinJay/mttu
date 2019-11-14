@@ -1,6 +1,10 @@
 <template>
-    <el-aside width="200px">
-        <el-menu router>
+    <el-aside width="200px" class="shadow h-screen">
+        <div class="flex flex-col items-center py-8">
+            <img src="@/assets/images/logo.png" class="w-24" alt="">
+            <p class="pt-4">Admin</p>
+        </div>
+        <el-menu router active-text-color='#586ADA'>
             <el-menu-item route="/home" index="Home">
                 <template slot="title">
                     <div class="flex">

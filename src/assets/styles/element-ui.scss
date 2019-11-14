@@ -1,0 +1,18 @@
+.new-profile {
+    .el-dialog__body {
+        padding: 0;
+    }
+}
+
+.profiles {
+    .el-card {
+        .el-card__body {
+            height: 71vh;
+            padding: 0;
+        }
+    }
+}
+
+.el-range-separator {
+    padding: 0!important;
+}

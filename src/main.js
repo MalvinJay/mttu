@@ -10,10 +10,16 @@ import "@/assets/styles/tailwind.css";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import VueMoment from "vue-moment";
+// import axios from "axios";
+
+// Vue.use(axios.defaults.headers.common['Authorization'] = `Basic ${access_token}`)
 
 Vue.use(ElementUI, {
   locale
 });
+
+Vue.use(VueMoment);
 
 Vue.config.productionTip = false;
 
