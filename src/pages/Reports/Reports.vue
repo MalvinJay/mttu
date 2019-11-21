@@ -9,18 +9,19 @@
       </div>
       <div class="h-full">
         <div class="flex justify-around items-center">
+          <span class="demonstration">Date Range</span>
+          <el-date-picker
+            v-model="form"
+            type="daterange"
+            range-separator="To"
+            start-placeholder="Start date"
+            end-placeholder="End date">
+          </el-date-picker>
 
-    <span class="demonstration">Date Range</span>
-    <el-date-picker
-      v-model="form"
-      type="daterange"
-      range-separator="To"
-      start-placeholder="Start date"
-      end-placeholder="End date">
-    </el-date-picker>
-
-    <el-button type="primary">Generate Report</el-button>
-     
+          <!-- <el-button type="primary">Generate Report</el-button> -->
+          <el-link class="bg-gray-700 py-2 px-4 rounded" 
+          :href="url" 
+          :underline="false" target="_blank">Generate Report</el-link>
         </div>     
       </div>
     </el-card>        
@@ -36,7 +37,19 @@ export default {
          to: ''
        }
     }
-   }
+  },
+  computed: {
+    url() {
+      if(this.form.from != '' && this.form.to != ''){
+        console.log('Current Form:', this.form)
+        return `https://mttu-api.herokuapp.com/v1/reports?from=${this.form.from}&to=${this.form.to}`
+      }
+      else {
+
+        return `https://mttu-api.herokuapp.com/v1/reports`
+      }
+    }
+  }
 }
 </script>
 

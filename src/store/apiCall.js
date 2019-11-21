@@ -4,15 +4,14 @@ var axiosCall = (data) => {
   let param = {
     method: data.method === undefined ? 'POST' : data.method,
     url: data.url,
-    headers: {
-      auth: {
-        username: data.auth.username,
-        password: data.auth.password
-      }
+    auth: {
+      username: localStorage.getItem('userEmail'),
+      password: localStorage.getItem('userPass')
     },
     data: data.data,
     params: data.parameters
   }
+
   return axios(param)
 }
 

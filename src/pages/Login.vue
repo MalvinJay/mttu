@@ -52,6 +52,10 @@ export default {
             this.loading = true;
             this.$store.dispatch('login', this.form)
             .then(response => {
+                localStorage.setItem('userEmail', this.form.name)
+                localStorage.setItem('userPass', this.form.password)  
+                localStorage.setItem('user', JSON.stringify(response.data))                           
+                console.log('Data after login: ', response.data)
                 this.$router.push('/')
             })
             .catch(error => {
@@ -62,7 +66,6 @@ export default {
                 console.log(error)
             })
             .finally(() => {
-                localStorage.setItem('userPass', this.form.password)
                 this.loading = false
             })
         }

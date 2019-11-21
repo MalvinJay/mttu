@@ -1,40 +1,57 @@
 <template>
   <div class="offenses">
-    <el-card class="box-card" shadow="never">
+    <el-card class="box-card h-full" shadow="never">
       <div slot="header" class="clearfix">
-        <div class="flex justify-between">
-          <span></span>
-  <el-popover
-    placement="left"
-    trigger="hover"
-    content="Add Offense">
-    <el-button type="primary" @click="dialogFormVisible = true" icon="el-icon-plus" circle slot="reference"></el-button>
-  </el-popover>            
+        <div class="flex justify-between items-center">
+          <el-input 
+            v-model="search" 
+            @click.native.enter="searchOffenses" 
+            clearable 
+            placeholder="Search Offense..." 
+            class="w-5/12">
+              <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+          <div class="flex items-center">
+            <el-button @click.prevent="fetchOffenses" icon="el-icon-refresh icon" class="text-xl mr-4" type="text"></el-button>
+            <el-popover
+              placement="left"
+              trigger="hover"
+              content="Book Offense">
+              <el-button type="primary" @click="dialogFormVisible = true" icon="el-icon-plus" circle slot="reference"></el-button>
+            </el-popover>           
+          </div>
         </div>
+
       </div>
-      <div class="h-full">
+      <div class="h-full" v-loading="loading">
         <div class="offenses-history">
-          <el-card shadow="hover" v-for="(offense, index) in Offenses" :key="index" class="my-4 text-gray-800 hover:text-gray-900 hover:bg-gray-100">
-            <div class="flex items-center w-full">
-              <el-checkbox></el-checkbox>
-              <avatar :username="offense.created_by" color="white" class="ml-4" ></avatar>
-              <div class="flex flex-col ml-4 w-4/5">
-                <p class="text-base font-bold">{{offense.title}}</p>
-                <div class="flex justify-between">
-                  <p class="text-sm">{{offense.description}}</p>
-                  <p class="text-xs">Created by {{offense.created_by}} | {{ offense.date | moment("from", "now") }}</p>
+          <div v-if="offenses">
+            <el-card shadow="hover" v-for="(offense, index) in filteredOffenses" :key="index" class="my-4 text-gray-800 mr-2 hover:text-gray-900 hover:bg-gray-100">
+              <div class="flex items-center w-full">
+                <el-checkbox></el-checkbox>
+                <avatar :username="offense.created_by.full_name" color="white" class="ml-4" ></avatar>
+                <div class="flex flex-col ml-4 w-4/5">
+                  <p class="text-base font-bold">{{offense.title}}</p>
+                  <div class="flex justify-between">
+                    <p class="text-sm">{{offense.description}}</p>
+                    <p class="text-xs">Created by {{offense.created_by.full_name}} | {{ offense.created_at | moment("from", "now") }}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </el-card>
+          </div>
+
+          <el-card shadow="hover" v-else>
+            <h3 class="text-center ">No Offenses</h3>
           </el-card>
         </div>
 
-        <div class="flex justify-between py-4">
+        <div class="flex justify-between py-4 border-t border-gray-200">
           <div></div>
           <el-pagination
             background
             layout="prev, pager, next"
-            :total="11">
+            :total="total">
           </el-pagination>          
         </div>        
       </div>
@@ -53,7 +70,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">Create</el-button>
+          <el-button type="primary" @click="createOffense()" :loading="creating">Create</el-button>
         </span>
       <!-- </transition>    -->
     </el-dialog>   
@@ -61,6 +78,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Avatar from "@/components/Avatar.vue"
 export default {
   components: {
@@ -68,7 +86,9 @@ export default {
   },
   data() {
     return {
+      search: '',
       checked: true,
+      creating: false,
       dialogFormVisible: false,
       form: {
         title: "",
@@ -82,24 +102,24 @@ export default {
           date: "11-09-2019",
           created_by: "Malvin"
         }, 
-        {
-          title: "Running Through Red Light",
-          description: "Man flying with wings downtown Madina",
-          date: "11-08-2019",
-          created_by: "George"
-        }, 
-        {
-          title: "Expired Drivers License",
-          description: "Driving license expired",
-          date: "11-06-2019",
-          created_by: "Arthur"
-        }, 
-        {
-          title: "Driving Without a License",
-          description: "Driver has been driving for months without a license",
-          date: "11-05-2019",
-          created_by: "Kwame"
-        }
+        // {
+        //   title: "Running Through Red Light",
+        //   description: "Man flying with wings downtown Madina",
+        //   date: "11-08-2019",
+        //   created_by: "George"
+        // }, 
+        // {
+        //   title: "Expired Drivers License",
+        //   description: "Driving license expired",
+        //   date: "11-06-2019",
+        //   created_by: "Arthur"
+        // }, 
+        // {
+        //   title: "Driving Without a License",
+        //   description: "Driver has been driving for months without a license",
+        //   date: "11-05-2019",
+        //   created_by: "Kwame"
+        // }
       ],
       columns: [
         {label: 'Officer Name', dataField: 'name', width: 'auto'},
@@ -110,6 +130,11 @@ export default {
       ],
       multipleSelection: []      
     }
+  },
+  mounted() {
+    console.log('State', this.state)
+    console.log('loading', this.loading)
+    this.$store.dispatch('getOffenses', { cache: false })
   },
   methods: {
     toggleSelection(rows) {
@@ -126,17 +151,66 @@ export default {
     },
     handleClick() {
 
+    },
+    close() {
+      this.dialogFormVisible = false
+      // this.editedIndex = -1
+    },    
+    fetchOffenses() {
+      this.$store.dispatch('getOffenses', { cache: false })
+    },
+    searchOffenses() {
+      this.$store.dispatch('getOffenses', { cache: false, search: search })
+    },
+    createOffense() {
+      this.creating = true;
+      this.$store.dispatch('createOffense', this.form)
+      .then(response => {                          
+        console.log('Response', response)
+        this.$message({
+          message: 'Offense Created',
+          type: 'success'
+        });       
+
+        this.close()
+      })
+      .catch(error => {
+        this.$message({
+          message: error,
+          type: 'error'
+        });                  
+        console.log(error)
+      })
+      .finally(() => {
+        this.creating = false;
+      })      
     }
-  } 
+  },
+  computed: {
+    ...mapGetters({
+      offenses: 'offenses',
+      state: 'offensesState',
+      Meta: 'offensesMeta'
+    }),
+    filteredOffenses () {
+      return this.offenses
+    },    
+    error() {
+      return this.state === 'ERROR' && this.state !== 'LOADING'
+    },
+    total() {
+      return this.Meta.total_filtered
+    },
+    loading() {
+      return this.state === 'LOADING'
+    },    
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-  .profiles-history {
-    height: 90%;
-    overflow-y: scroll;
-  }
-  .pagination {
-      
+  .offenses-history {   
+    height: 88%;
+    overflow-x: hidden;
   }
 </style>

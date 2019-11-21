@@ -8,14 +8,15 @@
             
             <div></div>
             
-            <div class="flex items-center">
+            <div class="flex items-center ml-20">
                 <span class="pr-1">Welcome |</span>
-                <h2 class="font-bold text-xl">Kwame Boama</h2>
+                <h2 class="font-bold text-xl">{{officer.full_name}}</h2>
             </div>
+            <div></div>
 
-            <div class="flex items-center">
-                <span class="pr-4">Search</span>
-                <el-input v-model="search" placeholder="Search..."></el-input>
+            <div class="flex items-center cursor-pointer" @click="logout">
+                <span class="pr-2">logout</span>
+                <el-button type="text" icon="el-icon-s-promotion"></el-button>
             </div>
         </div>
 
@@ -24,10 +25,25 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
             search: ""
+        }
+    },
+    methods: {
+        logout() {
+            localStorage.clear()
+            this.$router.push('login')         
+        }
+    },
+    computed: {
+        ...mapGetters({
+            user: 'user'
+        }),
+        officer() {
+            return JSON.parse(this.user);
         }
     }
 }

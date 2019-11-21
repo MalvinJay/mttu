@@ -1,3 +1,7 @@
+.el-loading-spinner {
+    left: 50%;
+}
+
 .new-profile {
     .el-dialog__body {
         padding: 0;
@@ -7,12 +11,28 @@
 .profiles {
     .el-card {
         .el-card__body {
-            height: 71vh;
+            height: 63vh;
             padding: 0;
+        }
+    }
+}
+
+.el-card {
+    .offenses {
+        height: 74vh;
+
+        .el-card {    
+            .el-card__body {
+                height: 84%;
+            }
         }
     }
 }
 
 .el-range-separator {
     padding: 0!important;
+}
+
+.el-link--inner {
+    color: #fff!important;
 }

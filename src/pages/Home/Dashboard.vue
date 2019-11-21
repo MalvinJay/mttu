@@ -1,19 +1,31 @@
 <template>
-   <div class="text-center">
-     <div class="text-center border-b border-gray-200 py-4 mb-8">Quick Summary</div>
-  <div class="flex justify-around">
-    <el-card shadow="hover">
-      Officers
-    </el-card>   
-    <el-card shadow="hover">
-      Offenses
-    </el-card>   
-    <el-card shadow="hover">
-      Request
-    </el-card>   
-  </div>
-
+  <el-card class="box-card" shadow="never">
+    <div slot="header" class="clearfix">
+      <p class="text-center py-2 text-xl">Quick Summary</p>
     </div>
+    <div class="text-center">
+      <el-row :gutter="12">
+        <el-col :span="8">
+          <el-card shadow="hover">
+            <h1 class="font-bold text-5xl">1</h1>
+            <span class="">Registered Officers</span>
+          </el-card>
+        </el-col>
+        <el-col :span="8">
+          <el-card shadow="hover">
+            <h1 class="font-bold text-5xl">5</h1>
+            <span class="">Offenders</span>
+          </el-card>
+        </el-col>
+        <el-col :span="8">
+          <el-card shadow="hover">
+            <h1 class="font-bold text-5xl">100</h1>
+            <span class="">Offenses</span>
+          </el-card>
+        </el-col>
+      </el-row>      
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -22,6 +34,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
 </style>
