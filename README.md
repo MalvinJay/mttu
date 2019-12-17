@@ -2,7 +2,7 @@
 
 ## Project setup
 ```
-yarn install
+yarn install && npm run rebuild node-sass
 ```
 
 ### Compiles and hot-reloads for development
